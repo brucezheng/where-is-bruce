@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
         <div className="picture-spacer"></div>
-        <h1>
+        <h1 className="header">
           Where is&nbsp;
           <span className="bruce-label">
             <div className="bruce-picture-container">
