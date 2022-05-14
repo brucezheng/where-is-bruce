@@ -152,10 +152,6 @@ h1 {
 }
 
 @media (max-width: 385px) {
-  .App {
-    padding: 0 16px;
-  }
-
   .location-blurb {
     padding: 0 12px 8px;
   }
