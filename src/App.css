@@ -23,7 +23,7 @@ h1 {
 }
 
 .picture-spacer {
-  height: calc(var(--bruce-picture-max-height) + 16px);
+  height: calc(var(--bruce-picture-max-height) + 24px);
   flex-shrink: 0;
 }
 .picture-spacer.shrink {
@@ -130,6 +130,10 @@ h1 {
 
   .location-summary{
     margin: 12ox 9;
+  }
+
+  .location-blurb {
+    border-bottom: 0px var(--app-bg-color) dashed;
   }
 }
 
