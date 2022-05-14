@@ -128,11 +128,13 @@ h1 {
   height: min(calc(100vw - 64px), 400px);
 }
 
-@media (max-height: 800px) {
+@media (max-width: 900px) {
   :root {
     --bruce-picture-max-height: 60px;
   }
+}
 
+@media (max-height: 800px) {
   .location-summary{
     margin: 12px 0;
     padding: 0 12px;
