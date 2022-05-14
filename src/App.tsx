@@ -22,7 +22,7 @@ function App() {
           <p className="location-blurb">
             <b>Today</b>, Bruce is in <span className="location-text" style={{backgroundColor: '#500000'}}>College Station, TX</span>
           </p>
-          <p className="sub-location-blurb">
+          <p className="sub-location-blurb first">
             <b>Before</b>, Bruce was in <span className="location-text" style={{backgroundColor: '#EEBC1D'}}>San Jose, CA</span> until <span className="date-text">May 6, 2022</span>
           </p>
           <p className="sub-location-blurb">

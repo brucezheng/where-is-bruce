@@ -1,6 +1,12 @@
+:root {
+  --bruce-picture-max-height: 120px;
+  --app-bg-color: #edf7fc;
+  --app-secondary-color: #fff;
+}
+
 .App {
   text-align: center;
-  background-color: #fff;
+  background-color: var(--app-bg-color);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -10,10 +16,6 @@
   color: black;
   padding: 0 32px;
   box-sizing: border-box;
-}
-
-:root {
-  --bruce-picture-max-height: 120px;
 }
 
 h1 {
@@ -72,11 +74,15 @@ h1 {
 .location-blurb {
   font-size: 28px;
   line-height: 40px;
-  margin: 16px;
+  padding: 4px 16px 16px;
+  border-bottom: 8px var(--app-bg-color) dashed;
+  margin: 0;
 }
 
 .location-summary {
-  padding: 12px 0 24px;
+  background-color: var(--app-secondary-color);
+  margin: 24px 0;
+  border-radius: 8px;
 }
 
 .location-text {
@@ -94,11 +100,15 @@ h1 {
   font-weight: 600;
 }
 
+.sub-location-blurb.first {
+  margin-top: 16px;
+}
+
 .sub-location-blurb {
   font-size: 14px;
   line-height: 22px;
   color: #555;
-  margin: 8px 36px;
+  margin: 8px 48px;
 }
 
 .App-link {
@@ -106,6 +116,8 @@ h1 {
 }
 
 .globe {
+  border-radius: 9999px;
+  background-color: var(--app-secondary-color);
   flex-shrink: 0;
   width: min(calc(100vw - 64px), 400px);
   height: min(calc(100vw - 64px), 400px);
@@ -117,7 +129,7 @@ h1 {
   }
 
   .location-summary{
-    padding: 0;
+    margin: 12ox 9;
   }
 }
 
@@ -127,11 +139,7 @@ h1 {
   }
 
   .location-blurb {
-    margin: 12px 8px;
-  }
-
-  .sub-location-blurb {
-    margin: 8px 16px;
+    padding: 0 12px 8px;
   }
 
   h1 {
