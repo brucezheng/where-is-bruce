@@ -133,7 +133,7 @@ h1 {
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
   .App {
     padding: 0 16px;
   }
@@ -143,6 +143,6 @@ h1 {
   }
 
   h1 {
-    font-size: 36px;
+    font-size: 32px;
   }
 }
