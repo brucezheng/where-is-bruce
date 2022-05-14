@@ -27,7 +27,7 @@ h1 {
 }
 
 .picture-spacer {
-  height: calc(var(--bruce-picture-max-height) + 24px);
+  height: calc(var(--bruce-picture-max-height) + 8px);
   flex-shrink: 0;
 }
 .picture-spacer.shrink {
