@@ -106,7 +106,7 @@ h1 {
 }
 
 .sub-location-blurb.first {
-  margin-top: 8px;
+  margin: 16px 8px 8px;
 }
 
 .sub-location-blurb {
@@ -144,6 +144,7 @@ h1 {
     border-bottom: 0px var(--app-bg-color) dashed;
   }
 
+  .sub-location-blurb.first,
   .sub-location-blurb {
     margin: 8px;
   }
