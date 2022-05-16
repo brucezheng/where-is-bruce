@@ -20,7 +20,7 @@ export const locations: Map<string,Location> = new Map([
     'brenham_tx', 
     {
       displayName: 'Brenham, TX',
-      latLng: { lat: 30.6280, lng: -96.3344 },
+      latLng: { lat: 30.1669, lng: -96.3977 },
       color: '#B8405E',
     },
   ],
