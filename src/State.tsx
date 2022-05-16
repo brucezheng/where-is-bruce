@@ -5,7 +5,16 @@ import create from 'zustand';
 export interface RotationState {
   rotation: number;
   incrementRotate: (delta: number) => void;
+  setRotate: (theta: number) => void;
 };
+
+export interface ComputedRotationState extends RotationState {
+  isRotating: boolean;
+  rotationDisplacement: number;
+  incrementDisplacement: (theta: number) => void;
+  stopRotation: () => void;
+  resumeRotation: () => void;
+}
 
 export interface ActiveState {
   active: boolean;
@@ -34,12 +43,33 @@ export const usePinLocationStore = create<LocationState>(set => ({
   resetLocation: () => set(state => ({ location: defaultLocation })),
 }));
 
+export const useComputedGlobeRotateStore = create<ComputedRotationState>(set => ({
+  isRotating: true,
+  rotation: 0,
+  rotationDisplacement: 0,
+  setRotate: (theta) => set(state => ({ rotation: theta })),
+  incrementRotate: (delta) => set(state => ({
+    rotation: state.rotation + delta,
+  })),
+  incrementDisplacement: (delta) => set(state => ({
+    rotationDisplacement: state.rotationDisplacement + delta,
+  })),
+  stopRotation: () => set(state => ({
+    isRotating: false,
+  })),
+  resumeRotation: () => set(state => ({
+    isRotating: true,
+  })),
+}));
+
 export const useGlobeRotateStore = create<RotationState>(set => ({
   rotation: 0,
   incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
+  setRotate: (theta) => set(state => ({ rotation: theta })),
 }));
 
 export const usePinRotateStore = create<RotationState>(set => ({
   rotation: 0,
   incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
+  setRotate: (theta) => set(state => ({ rotation: theta })),
 }));

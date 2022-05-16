@@ -29,7 +29,15 @@ export const locations: Map<string,Location> = new Map([
     {
       displayName: 'San Jose, CA',
       latLng: { lat: 37.3382, lng: -121.8863 },
-      color: '#EEBC1D',
+      color: '#205375',
+    },
+  ],
+  [
+    'barcelona', 
+    {
+      displayName: 'Barcelona, Spain',
+      latLng: { lat: 41.390205, lng: 2.154007 },
+      color: '#FCB507',
     },
   ],
 ]);

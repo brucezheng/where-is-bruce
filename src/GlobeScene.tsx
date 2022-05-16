@@ -1,11 +1,13 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Vector3, Euler, Quaternion } from 'three';
-import { usePinActiveStore, usePinLocationStore, useGlobeRotateStore, usePinRotateStore} from './State';
+import { usePinActiveStore, usePinLocationStore, useComputedGlobeRotateStore, useGlobeRotateStore, usePinRotateStore} from './State';
 import { useTexture } from '@react-three/drei';
 import { useSpring } from '@react-spring/three';
 import { useRef } from 'react';
 import colorImg from './2k_earth_alt.jpg';
 import normalImg from './2k_earth_normal_map.jpg';
+
+const getRotationSpeed = (rpm: number) => 2 * Math.PI * rpm / 60;
 
 const GLOBE_RADIUS = 1;
 const GLOBE_TILT = 0.175 * Math.PI;
@@ -14,8 +16,12 @@ const PRIMARY_MAP_PIN_MAXIMIZED_SCALE = 0.06;
 const PRIMARY_MAP_PIN_HEIGHT_DIMENSION = 3;
 const PRIMARY_MAP_PIN_WIDTH_DIMENSION = 1;
 const PRIMARY_MAP_PIN_PADDING = 0.005;
-const ROTATION_RPM = 2.5;
+const ROTATION_RPM = 10;
 const PIN_ROTATION_RPM = 10;
+const PIN_ACTIVE_ROTATION_RPM = 25;
+const ROTATION_SPEED = getRotationSpeed(ROTATION_RPM);
+const PIN_ROTATION_SPEED = getRotationSpeed(PIN_ROTATION_RPM);
+const PIN_ACTIVE_ROTATION_SPEED = getRotationSpeed(PIN_ACTIVE_ROTATION_RPM);
 
 interface MarkerPosition {
   position: Vector3;
@@ -67,10 +73,28 @@ const Sphere = () => {
     normalImg,
   ]);
 
-  const currRotate = useGlobeRotateStore(state => state.rotation);
+  const setGlobeRotate = useGlobeRotateStore(state => state.setRotate);
 
-  useFrame(() => {
-    sphere.current!.rotation.y = currRotate;
+  const baseRotate = useComputedGlobeRotateStore(state => state.rotation);
+  const displacement = useComputedGlobeRotateStore(state => state.rotationDisplacement);
+  const isRotating = useComputedGlobeRotateStore(state => state.isRotating);
+  const increment = useComputedGlobeRotateStore(state => state.incrementRotate);
+  const { springDisplacement } = useSpring({
+    springDisplacement: displacement,
+  });
+  const { smoothRotateSpeed } = useSpring({
+    smoothRotateSpeed: isRotating ? ROTATION_SPEED : 0,
+    config: { mass: 2, tension: 80 },
+  })
+
+  useFrame((state, delta) => {
+    // Set to 0 when not rotating so that we brake instantly
+    const rotateSpeed = isRotating ? smoothRotateSpeed.get() : 0;
+    const rotationDelta = rotateSpeed * delta;
+    increment(rotationDelta);
+    const globeRotate = baseRotate + springDisplacement.get();
+    setGlobeRotate(globeRotate)
+    sphere.current!.rotation.y = globeRotate;
   });
 
   return (
@@ -96,14 +120,14 @@ const MapPin = () => {
   const { pinScale, emissiveIntensity, springLat, springLng, springPinColor } =
     useSpring({
       pinScale: active ? PRIMARY_MAP_PIN_MAXIMIZED_SCALE : PRIMARY_MAP_PIN_DEFAULT_SCALE,
-      emissiveIntensity: active ? 5 : 2,
+      emissiveIntensity: active ? 3 : 1,
       springLat: pinLatLng.lat,
       springLng: pinLatLng.lng,
       springPinColor: pinColor,
     });
 
   useFrame((state, delta) => {
-    const rotationDelta = 2 * Math.PI * PIN_ROTATION_RPM * (delta / 60);
+    const rotationDelta = (active ? PIN_ACTIVE_ROTATION_SPEED : PIN_ROTATION_SPEED) * delta;
     incrementPinRotate(rotationDelta);
   });
 
@@ -133,13 +157,6 @@ const MapPin = () => {
 }
 
 const GlobeWithPins = () => {
-  const increment = useGlobeRotateStore(state => state.incrementRotate);
-
-  useFrame((state, delta) => {
-    const rotationDelta = 2 * Math.PI * ROTATION_RPM * (delta / 60);
-    increment(rotationDelta);
-  });
-
   return (<><Sphere /><MapPin /></>);
 }
 
