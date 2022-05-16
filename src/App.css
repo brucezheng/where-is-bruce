@@ -106,14 +106,14 @@ h1 {
 }
 
 .sub-location-blurb.first {
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .sub-location-blurb {
   font-size: 14px;
   line-height: 22px;
   color: #555;
-  margin: 8px 48px;
+  margin: 8px 36px;
 }
 
 .App-link {
@@ -136,12 +136,20 @@ h1 {
 
 @media (max-height: 800px) {
   .location-summary{
-    margin: 12px 0;
+    margin: 24px 0;
     padding: 0 12px;
   }
 
   .location-blurb {
     border-bottom: 0px var(--app-bg-color) dashed;
+  }
+
+  .sub-location-blurb {
+    margin: 8px;
+  }
+
+  .blurb-verbose {
+    display: none;
   }
 
   .globe {

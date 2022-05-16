@@ -20,13 +20,17 @@ function App() {
         </h1>
         <div className="location-summary">
           <p className="location-blurb">
-            <b>Today</b>, Bruce is in <span className="location-text" style={{backgroundColor: '#500000'}}>College Station, TX</span>
+            <b>Today: </b> Bruce is in <span className="location-text" style={{backgroundColor: '#500000'}}>College Station, TX</span>
           </p>
           <p className="sub-location-blurb first">
-            <b>Before</b>, Bruce was in <span className="location-text" style={{backgroundColor: '#EEBC1D'}}>San Jose, CA</span> until <span className="date-text">May 6, 2022</span>
+            <b>Before: </b>
+            <span className="blurb-verbose">Bruce was in </span>
+            <span className="location-text" style={{backgroundColor: '#EEBC1D'}}>San Jose, CA</span> until <span className="date-text">May 6, 2022</span>
           </p>
           <p className="sub-location-blurb">
-            <b>After</b>, Bruce will be in <span className="location-text" style={{backgroundColor: '#B8405E'}}>Brenham, TX</span> on  <span className="date-text">May 20, 2022</span>
+            <b>After: </b>
+            <span className="blurb-verbose">Bruce will be in </span>
+            <span className="location-text" style={{backgroundColor: '#B8405E'}}>Brenham, TX</span> on  <span className="date-text">May 20, 2022</span>
           </p>
         </div>
         <div className="globe">
