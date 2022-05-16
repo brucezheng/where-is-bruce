@@ -1,19 +1,19 @@
-import { Suspense, useRef, memo } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-//import { TextureLoader } from 'three/src/loaders/TextureLoader';
-import { useTexture } from "@react-three/drei"
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Vector3, Euler, Quaternion } from 'three';
+import { usePinActiveStore, usePinLocationStore, useGlobeRotateStore, usePinRotateStore} from './State';
+import { useTexture } from '@react-three/drei';
+import { useSpring } from '@react-spring/three';
+import { useRef } from 'react';
 import colorImg from './2k_earth_alt.jpg';
 import normalImg from './2k_earth_normal_map.jpg';
-import create from 'zustand'
 
 const GLOBE_RADIUS = 1;
 const GLOBE_TILT = 0.175 * Math.PI;
-const PRIMARY_MAP_PIN_SCALE = 0.04;
-const PRIMARY_MAP_PIN_HEIGHT = PRIMARY_MAP_PIN_SCALE * 3;
-const PRIMARY_MAP_PIN_WIDTH = PRIMARY_MAP_PIN_SCALE;
-const PRIMARY_MAP_PIN_PADDING = 0.01;
-const PRIMARY_MAP_PIN_DISTANCE = GLOBE_RADIUS + PRIMARY_MAP_PIN_HEIGHT/2 + PRIMARY_MAP_PIN_PADDING;
+const PRIMARY_MAP_PIN_DEFAULT_SCALE = 0.04;
+const PRIMARY_MAP_PIN_MAXIMIZED_SCALE = 0.06;
+const PRIMARY_MAP_PIN_HEIGHT_DIMENSION = 3;
+const PRIMARY_MAP_PIN_WIDTH_DIMENSION = 1;
+const PRIMARY_MAP_PIN_PADDING = 0.005;
 const ROTATION_RPM = 2.5;
 const PIN_ROTATION_RPM = 10;
 
@@ -22,13 +22,15 @@ interface MarkerPosition {
   rotation: Euler;
 }
 
-const getMarkerPosition = (lat: number, lng: number, rotate: number, pinRotate: number) : MarkerPosition => {
+const getMarkerPosition = (lat: number, lng: number, rotate: number, pinRotate: number, pinScale: number) : MarkerPosition => {
+  const pinDistance = GLOBE_RADIUS + pinScale * PRIMARY_MAP_PIN_HEIGHT_DIMENSION / 2 + PRIMARY_MAP_PIN_PADDING;
+
   // Converting Lat/Lng into cartesian
   const theta = (lng / 180 * Math.PI) + rotate;
   const phi = (Math.PI / 2) - (lat / 180 * Math.PI);
-  let posX = PRIMARY_MAP_PIN_DISTANCE * Math.cos(theta) * Math.sin(phi);
-  let posY = PRIMARY_MAP_PIN_DISTANCE * Math.cos(phi);
-  let posZ = -1 * PRIMARY_MAP_PIN_DISTANCE * Math.sin(theta) * Math.sin(phi);
+  let posX = pinDistance * Math.cos(theta) * Math.sin(phi);
+  let posY = pinDistance * Math.cos(phi);
+  let posZ = -1 * pinDistance * Math.sin(theta) * Math.sin(phi);
 
   // Take into account the tilt of the globe
   const newPosY = posY * Math.cos(GLOBE_TILT) - posZ * Math.sin(GLOBE_TILT);
@@ -55,23 +57,6 @@ const getMarkerPosition = (lat: number, lng: number, rotate: number, pinRotate: 
   };
 };
 
-//const memoGetMarkerPosition = memo(getMarkerPosition);
-
-interface RotationState {
-  rotation: number;
-  incrementRotate: (delta: number) => void;
-}
-
-const useStore = create<RotationState>(set => ({
-  rotation: 0,
-  incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
-}))
-
-const usePinStore = create<RotationState>(set => ({
-  rotation: 0,
-  incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
-}))
-
 const Sphere = () => {
   const sphere = useRef<any>();
   const [
@@ -82,7 +67,7 @@ const Sphere = () => {
     normalImg,
   ]);
 
-  const currRotate = useStore(state => state.rotation);
+  const currRotate = useGlobeRotateStore(state => state.rotation);
 
   useFrame(() => {
     sphere.current!.rotation.y = currRotate;
@@ -99,59 +84,79 @@ const Sphere = () => {
   );
 };
 
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-const MapPin = (props: LatLng) => {
+const MapPin = () => {
   const mapPin = useRef<any>();
 
-  const currGlobeRotate = useStore(state => state.rotation);
-  const currPinRotate = usePinStore(state => state.rotation);
-  const incrementPinRotate = usePinStore(state => state.incrementRotate);
+  const currGlobeRotate = useGlobeRotateStore(state => state.rotation);
+  const currPinRotate = usePinRotateStore(state => state.rotation);
+  const incrementPinRotate = usePinRotateStore(state => state.incrementRotate);
+  const active = usePinActiveStore(state => state.active);
+  const pinLatLng = usePinLocationStore(state => state.location.latLng);
+  const pinColor = usePinLocationStore(state => state.location.color);
+  const { pinScale, emissiveIntensity, springLat, springLng, springPinColor } =
+    useSpring({
+      pinScale: active ? PRIMARY_MAP_PIN_MAXIMIZED_SCALE : PRIMARY_MAP_PIN_DEFAULT_SCALE,
+      emissiveIntensity: active ? 5 : 2,
+      springLat: pinLatLng.lat,
+      springLng: pinLatLng.lng,
+      springPinColor: pinColor,
+    });
 
   useFrame((state, delta) => {
     const rotationDelta = 2 * Math.PI * PIN_ROTATION_RPM * (delta / 60);
     incrementPinRotate(rotationDelta);
   });
 
-  const initMarker = getMarkerPosition(props.lat, props.lng, currGlobeRotate, currPinRotate);
+  const initMarker =
+    getMarkerPosition(springLat.get(), springLng.get(), currGlobeRotate, currPinRotate, pinScale.get());
   return (
     <mesh ref={mapPin} rotation={initMarker.rotation} position={initMarker.position}>
       <cylinderBufferGeometry
-        args={[0, PRIMARY_MAP_PIN_WIDTH, PRIMARY_MAP_PIN_HEIGHT, 4, 1]}
+        args={
+          [
+            0,
+            pinScale.get() * PRIMARY_MAP_PIN_WIDTH_DIMENSION,
+            pinScale.get() * PRIMARY_MAP_PIN_HEIGHT_DIMENSION,
+            3,
+            1,
+          ]
+        }
       />
       <meshStandardMaterial
-        color={'rgb(80,0,0)'}
+        color={springPinColor.get()}
         opacity={0.9}
-        emissive={'rgb(80,0,0)'}
-        emissiveIntensity={2}
+        emissive={springPinColor.get()}
+        emissiveIntensity={emissiveIntensity.get()}
       />
     </mesh>
   );
 }
 
 const GlobeWithPins = () => {
-  const increment = useStore(state => state.incrementRotate);
-  const cStatLat = 30.6280;
-  const cStatLng = -96.3344;
+  const increment = useGlobeRotateStore(state => state.incrementRotate);
 
   useFrame((state, delta) => {
     const rotationDelta = 2 * Math.PI * ROTATION_RPM * (delta / 60);
     increment(rotationDelta);
   });
 
-  return (<><Sphere /><MapPin lat={cStatLat} lng={cStatLng} /></>);
+  return (<><Sphere /><MapPin /></>);
 }
 
 export const GlobeScene = () => {
+  const setPinActive = usePinActiveStore(state => state.setActive);
   return (
     <Canvas
       camera={{
         near: 0.1,
         far: 1000,
         zoom: 3,
+      }}
+      onMouseEnter={() => {
+        setPinActive(true);
+      }}
+      onMouseLeave={() => {
+        setPinActive(false);
       }}>
       <pointLight color={0xffffff} intensity={1.5} position={[-2, 5, 8]} />
       <ambientLight color={0xffffff} intensity={0.8 } />
