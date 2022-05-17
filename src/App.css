@@ -4,22 +4,35 @@
   --app-secondary-color: #fff;
 }
 
+.App.App-main {
+  height: max(600px, 100vh);
+}
+.App:not(.App-main) {
+  min-height: 100vh;
+}
+
 .App {
+  --title-font-size: 28px;
+  --body-font-size: 16px;
+  --body-2-font-size: 14px;
   text-align: center;
   background-color: var(--app-bg-color);
-  height: max(600px, 100vh);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
   color: black;
   padding: 0 32px;
   box-sizing: border-box;
 }
 
+.App-main .header {
+  margin: 18px;
+}
+
 .header {
   white-space: nowrap;
+  margin: 36px 0 18px;
 }
 
 h1 {
@@ -27,10 +40,15 @@ h1 {
 }
 
 .picture-spacer {
+  height: 0;
+  transition: height 0.5s;
+}
+
+.App-main .picture-spacer {
   height: calc(var(--bruce-picture-max-height) + 8px);
   flex-shrink: 0;
 }
-.picture-spacer.shrink {
+.App-main .picture-spacer.shrink {
   flex-shrink: 1;
 }
 
@@ -41,7 +59,7 @@ h1 {
   --bruce-picture-opacity: 0;
   --bruce-picture-height: 0;
   color: var(--bruce-name-color);
-  transition: padding 0.5s, background-color 0.5s, color 0.25s;
+  transition: border-radius 0.5s, padding 0.5s, background-color 0.5s, color 0.25s;
   border-radius: 0 0 8px 8px;
 }
 
@@ -65,29 +83,58 @@ h1 {
   border: 4px solid var(--bruce-name-color);
   box-sizing: border-box;
   border-radius: 8px;
+  cursor: pointer;
 }
 
+.bruce-label.bruce-label-active,
 .bruce-label:hover {
-  --bruce-picture-height: var(--bruce-picture-max-height);
-  --bruce-picture-opacity: 1;
   background-color: var(--bruce-name-color);
   color: white;
   padding: 2px 4px;
 }
 
+.bruce-label.bruce-label-active {
+  border-radius: 8px;
+}
+
+.bruce-label:hover:not(.bruce-label-active) {
+  --bruce-picture-height: var(--bruce-picture-max-height);
+  --bruce-picture-opacity: 1;
+}
+
 .location-blurb {
-  font-size: 28px;
+  font-size: var(--title-font-size);
   line-height: 40px;
-  padding: 4px 16px 16px;
+  padding: 16px 38px 16px;
   border-bottom: 8px var(--app-bg-color) dashed;
   margin: 0;
 }
 
-.location-summary {
+.collapsible-text {
   background-color: var(--app-secondary-color);
-  margin: 36px 0;
   border-radius: 8px;
-  padding: 12px;
+  flex-shrink: 0;
+}
+
+.biography-container {
+  max-width: 40ch;
+  margin: 36px 0; 
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.location-summary-container {
+  max-width: 48ch;
+  margin: 18px 0; 
+  flex-shrink: 0;
+}
+
+.accordion {
+  overflow: hidden;
+}
+
+.accordion.transition {
+  transition: height 0.5s, margin 0.5s;  
 }
 
 .location-text {
@@ -107,13 +154,53 @@ h1 {
 
 .sub-location-blurb.first {
   margin: 16px 8px 8px;
+  padding: 0;
 }
 
 .sub-location-blurb {
-  font-size: 14px;
+  font-size: var(--body-2-font-size);
   line-height: 22px;
   color: #555;
   margin: 8px 36px;
+  padding: 0 12px 12px;
+}
+
+.collapsible-header {
+  display: flex;
+  padding: 16px 16px 0;
+  font-size: var(--title-font-size);
+}
+
+.banner-text {
+  border: 2px solid var(--app-bg-color);
+  background-color: var(--app-bg-color);
+  padding: 0 6px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.close-button {
+  margin-left: auto;
+  border: none;
+  background-color: var(--app-bg-color);
+  padding: 0 14px;
+  border-radius: 32px;
+  color: black;
+}
+
+.biography-content {
+  padding: 16px;
+  font-size: var(--body-font-size);
+}
+
+.no-top-margin {
+  margin-top: 0;
+}
+
+.first-bio-word {
+  font-size: var(--title-font-size);
+  font-weight: 600;
+  color: var(--bruce-name-color);
 }
 
 .App-link {
@@ -121,11 +208,14 @@ h1 {
 }
 
 .globe {
+  --globe-width: min(calc(100vw - 64px), 400px);
+  margin-top: 18px;
   border-radius: 9999px;
   background-color: var(--app-secondary-color);
   flex-shrink: 0;
   width: min(calc(100vw - 64px), 400px);
   height: min(calc(100vw - 64px), 400px);
+  transition: transform 0.5s;
 }
 
 @media (max-width: 900px) {
@@ -135,9 +225,8 @@ h1 {
 }
 
 @media (max-height: 800px) {
-  .location-summary{
-    margin: 24px 0;
-    padding: 0 12px;
+  .location-summary-container{
+    margin: 8px 0;
   }
 
   .location-blurb {
@@ -161,6 +250,13 @@ h1 {
 }
 
 @media (max-width: 385px) {
+  .collapsible-header {
+    padding: 12px 12px 0;
+  }
+  .biography-content {
+    padding: 12px;
+  }
+
   .location-blurb {
     padding: 0 12px 8px;
   }

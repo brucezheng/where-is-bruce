@@ -1,42 +1,27 @@
 import React from 'react';
-import LocationText from './LocationText';
+import LocationSummary from './LocationSummary';
+import Biography from './Biography';
+import QuestionHeader from './QuestionHeader';
 import { GlobeScene } from './GlobeScene';
+import { View, useLayoutStore } from './LayoutState';
 import { locations } from './Locations';
 import './App.css';
-import brucePic from './IMG_9332.jpg';
 
 const App = () => {
+  const view = useLayoutStore(state => state.view);
   return (
-    <div className="App">
+    <div className={'App' + (view === View.Main ? ' App-main' : '')}>
         <div className="picture-spacer"></div>
-        <h1 className="header">
-          Where is&nbsp;
-          <span className="bruce-label">
-            <div className="bruce-picture-container">
-              <img className="bruce-picture" src={brucePic} alt={'It\'s me!'}>
-              </img>
-            </div>
-            Bruce
-          </span>?
-        </h1>
-        <div className="location-summary">
-          <p className="location-blurb">
-            <b>Today: </b> Bruce is in <LocationText location={locations.get('college_station_tx')} />
-          </p>
-          <p className="sub-location-blurb first">
-            <b>Before: </b>
-            <span className="blurb-verbose">Bruce was in </span>
-            <LocationText location={locations.get('san_jose_ca')} /> until <span className="date-text">May 6, 2022</span>
-          </p>
-          <p className="sub-location-blurb">
-            <b>After: </b>
-            <span className="blurb-verbose">Bruce will be in </span>
-            <LocationText location={locations.get('brenham_tx')} /> on  <span className="date-text">May 20, 2022</span>
-          </p>
-        </div>
+        <QuestionHeader />
+        <LocationSummary
+          presentLocation={locations.get('college_station_tx')}
+          previousLocation={locations.get('san_jose_ca')}
+          nextLocation={locations.get('brenham_tx')}
+        />
         <div className="globe">
           <GlobeScene />
         </div>
+        <Biography />
         <div className="picture-spacer shrink"></div>
     </div>
   );

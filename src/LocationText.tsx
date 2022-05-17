@@ -23,6 +23,7 @@ const LocationText = (props: LocationTextProps) => {
   const setPinActive = usePinActiveStore(state => state.setActive);
   const setPinLocation = usePinLocationStore(state => state.setLocation);
   const resetPinLocation = usePinLocationStore(state => state.resetLocation);
+
   return (
     <span
       className="location-text"
