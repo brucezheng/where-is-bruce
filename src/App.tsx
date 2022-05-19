@@ -4,7 +4,7 @@ import Biography from './Biography';
 import QuestionHeader from './QuestionHeader';
 import { GlobeScene } from './GlobeScene';
 import { View, useLayoutStore } from './LayoutState';
-import { locations } from './Locations';
+import { currentTrip, previousTrip, nextTrip } from './Trips';
 import './App.css';
 
 const App = () => {
@@ -14,9 +14,9 @@ const App = () => {
         <div className="picture-spacer"></div>
         <QuestionHeader />
         <LocationSummary
-          presentLocation={locations.get('college_station_tx')}
-          previousLocation={locations.get('san_jose_ca')}
-          nextLocation={locations.get('brenham_tx')}
+          currentTrip={currentTrip}
+          previousTrip={previousTrip}
+          nextTrip={nextTrip}
         />
         <div className="globe">
           <GlobeScene />

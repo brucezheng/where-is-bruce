@@ -25,6 +25,30 @@ export const locations: Map<string,Location> = new Map([
     },
   ],
   [
+    'huntsville_tx', 
+    {
+      displayName: 'Huntsville, TX',
+      latLng: { lat: 30.7235, lng: -95.5508 },
+      color: '#B05638',
+    },
+  ],
+  [
+    'palestine_tx', 
+    {
+      displayName: 'Palestine, TX',
+      latLng: { lat: 31.7621, lng: -95.6308 },
+      color: '#C43733',
+    },
+  ],
+  [
+    'san_antonio_tx', 
+    {
+      displayName: 'San Antonio, TX',
+      latLng: { lat: 29.4252, lng: -98.4946 },
+      color: '#784B80',
+    },
+  ],
+  [
     'san_jose_ca', 
     {
       displayName: 'San Jose, CA',
@@ -41,3 +65,7 @@ export const locations: Map<string,Location> = new Map([
     },
   ],
 ]);
+
+export const getLocation = (locationId: string): Location => {
+  return locations.get(locationId) ?? defaultLocation;
+} 
