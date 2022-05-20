@@ -24,12 +24,12 @@ const LocationSummary = (props: LocationSummaryProps) => {
         <p className="sub-location-blurb first">
           <b>Before: </b>
           <span className="blurb-verbose">Bruce was in </span>
-          <LocationText location={getLocation(props.previousTrip.locationId)} /> until <span className="date-text">May 6, 2022</span>
+          <LocationText location={getLocation(props.previousTrip.locationId)} /> until <span className="date-text">{props.previousTrip.tripEnd}</span>
         </p>
         <p className="sub-location-blurb">
           <b>After: </b>
           <span className="blurb-verbose">Bruce will be in </span>
-          <LocationText location={getLocation(props.nextTrip.locationId)} /> on  <span className="date-text">May 20, 2022</span>
+          <LocationText location={getLocation(props.nextTrip.locationId)} /> on  <span className="date-text">{props.nextTrip.tripStart}</span>
         </p>
       </div>
     </Accordion>
