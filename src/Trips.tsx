@@ -65,7 +65,7 @@ export const trips: Array<Trip> = [
   {
     locationId: 'college_station_tx',
     tripStart: 'August 7, 2022',
-    tripEnd: 'August 31, 2022',
+    tripEnd: 'October 31, 2022',
   },
 ];
 
