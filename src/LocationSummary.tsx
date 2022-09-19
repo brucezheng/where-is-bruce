@@ -18,6 +18,7 @@ const LocationSummary = ({previousTrip, currentTrip, nextTrip}: LocationSummaryP
   const view = useLayoutStore(state => state.view);
   const setPinDefaultLocation = usePinLocationStore(state => state.setDefaultLocation);
 
+  console.log("next", nextTrip);
   useEffect(() => setPinDefaultLocation(getLocation(currentTrip.locationId)), []);
 
   return (

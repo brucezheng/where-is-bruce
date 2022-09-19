@@ -184,17 +184,20 @@ export const currentTrip: Trip =
       trip => currentDate >= new Date(trip.tripStart)
         && new Date(trip.tripEnd) >= currentDate)
     ?? defaultTrip;
-export const nextTrip: Trip =
-  trips
-    .filter(trip => new Date(trip.tripStart) > currentDate)
-    .reduce((a, b) => new Date(a.tripStart) < new Date(b. tripStart) ? a : b, defaultTrip)
-    ?? defaultTrip;
+const getNextTrip = () => {
+  const filteredTrips = trips
+    .filter(trip => new Date(trip.tripStart) > currentDate);
+  return (filteredTrips.length ?
+    filteredTrips.reduce((a, b) => new Date(a.tripStart) < new Date(b. tripStart) ? a : b) :
+    defaultTrip);
+}
+export const nextTrip = getNextTrip();
 export const previousTrip: Trip =
   trips
     .filter(trip => new Date(trip.tripEnd) < currentDate)
-    .reduce((a, b) => new Date(a.tripStart) > new Date(b. tripStart) ? a : b, defaultTrip)
-    ?? defaultTrip;
+    .reduce((a, b) => new Date(a.tripStart) > new Date(b. tripStart) ? a : b, defaultTrip);
 
 export function tripEquals(tripA: Trip, tripB: Trip): boolean {
+  console.log(tripA, tripB);
   return JSON.stringify(tripA) === JSON.stringify(tripB);
 }
