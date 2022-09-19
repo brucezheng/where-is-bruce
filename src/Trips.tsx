@@ -65,11 +65,111 @@ export const trips: Array<Trip> = [
   {
     locationId: 'college_station_tx',
     tripStart: 'August 7, 2022',
-    tripEnd: 'October 31, 2022',
+    tripEnd: 'August 18, 2022',
+  },
+  {
+    locationId: 'tomball_tx',
+    tripStart: 'August 19, 2022',
+    tripEnd: 'August 20, 2022',
+  },
+  {
+    locationId: 'college_station_tx',
+    tripStart: 'August 21, 2022',
+    tripEnd: 'September 1, 2022',
+  },
+  {
+    locationId: 'austin_tx',
+    tripStart: 'September 2, 2022',
+    tripEnd: 'September 2, 2022',
+  },
+  {
+    locationId: 'dallas_tx',
+    tripStart: 'September 3, 2022',
+    tripEnd: 'September 3, 2022',
+  },
+  {
+    locationId: 'raton_nm',
+    tripStart: 'September 4, 2022',
+    tripEnd: 'September 4, 2022',
+  },
+  {
+    locationId: 'denver_co',
+    tripStart: 'September 5, 2022',
+    tripEnd: 'September 8, 2022',
+  },
+  {
+    locationId: 'grand_junction_co',
+    tripStart: 'September 9, 2022',
+    tripEnd: 'September 9, 2022',
+  },
+  {
+    locationId: 'arches_ut',
+    tripStart: 'September 10, 2022',
+    tripEnd: 'September 10, 2022',
+  },
+  {
+    locationId: 'salt_lake_city_ut',
+    tripStart: 'September 11, 2022',
+    tripEnd: 'September 15, 2022',
+  },
+  {
+    locationId: 'yellowstone_wy',
+    tripStart: 'September 16, 2022',
+    tripEnd: 'September 17, 2022',
+  },
+  {
+    locationId: 'missoula_mt',
+    tripStart: 'September 18, 2022',
+    tripEnd: 'September 22, 2022',
+  },
+  {
+    locationId: 'yakima_wa',
+    tripStart: 'September 23, 2022',
+    tripEnd: 'September 23, 2022',
+  },
+  {
+    locationId: 'mt_rainier_wa',
+    tripStart: 'September 24, 2022',
+    tripEnd: 'September 24, 2022',
+  },
+  {
+    locationId: 'seattle_wa',
+    tripStart: 'September 25, 2022',
+    tripEnd: 'September 25, 2022',
+  },
+  {
+    locationId: 'portland_or',
+    tripStart: 'September 26, 2022',
+    tripEnd: 'September 29, 2022',
+  },
+  {
+    locationId: 'seattle_wa',
+    tripStart: 'September 30, 2022',
+    tripEnd: 'September 30, 2022',
+  },
+  {
+    locationId: 'austin_tx',
+    tripStart: 'October 1, 2022',
+    tripEnd: 'October 3, 2022',
+  },
+  {
+    locationId: 'college_station_tx',
+    tripStart: 'October 4, 2022',
+    tripEnd: 'October 5, 2022',
+  },
+  {
+    locationId: 'rosebud_tx',
+    tripStart: 'October 7, 2022',
+    tripEnd: 'October 8, 2022',
+  },
+  {
+    locationId: 'portland_or',
+    tripStart: 'October 9, 2022',
+    tripEnd: 'October 14, 2022',
   },
 ];
 
-const defaultTrip: Trip = {
+export const defaultTrip: Trip = {
   locationId: 'san_jose_ca',
   tripStart: 'May 2, 2022',
   tripEnd: 'May 6, 2022',
@@ -87,10 +187,14 @@ export const currentTrip: Trip =
 export const nextTrip: Trip =
   trips
     .filter(trip => new Date(trip.tripStart) > currentDate)
-    .reduce((a, b) => new Date(a.tripStart) < new Date(b. tripStart) ? a : b)
+    .reduce((a, b) => new Date(a.tripStart) < new Date(b. tripStart) ? a : b, defaultTrip)
     ?? defaultTrip;
 export const previousTrip: Trip =
   trips
     .filter(trip => new Date(trip.tripEnd) < currentDate)
-    .reduce((a, b) => new Date(a.tripStart) > new Date(b. tripStart) ? a : b)
+    .reduce((a, b) => new Date(a.tripStart) > new Date(b. tripStart) ? a : b, defaultTrip)
     ?? defaultTrip;
+
+export function tripEquals(tripA: Trip, tripB: Trip): boolean {
+  return JSON.stringify(tripA) === JSON.stringify(tripB);
+}

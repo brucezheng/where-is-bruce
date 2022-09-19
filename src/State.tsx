@@ -22,8 +22,10 @@ export interface ActiveState {
 }
 
 export interface LocationState {
+  defaultLocation: Location;
   location: Location;
   setLocation: (newLocation: Location) => void;
+  setDefaultLocation: (newDefaultLocation: Location) => void;
   resetLocation: () => void;
 };
 
@@ -39,8 +41,11 @@ export const usePinActiveStore = create<ActiveState>(set => ({
 
 export const usePinLocationStore = create<LocationState>(set => ({
   location: defaultLocation,
-  setLocation: (newLocation) => set(state => ({ location: newLocation })), 
-  resetLocation: () => set(state => ({ location: defaultLocation })),
+  defaultLocation: defaultLocation,
+  setLocation: (newLocation) => set(state => ({ ...state, location: newLocation })),
+  setDefaultLocation: (newDefaultLocation) =>
+    set(() => ({ location: newDefaultLocation, defaultLocation: newDefaultLocation })),
+  resetLocation: () => set(state => ({ ...state, location: state.defaultLocation })),
 }));
 
 export const useComputedGlobeRotateStore = create<ComputedRotationState>(set => ({
