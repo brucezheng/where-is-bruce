@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Vector3, Euler, Quaternion } from 'three';
-import { usePinActiveStore, usePinLocationStore, useComputedGlobeRotateStore, useGlobeRotateStore, usePinRotateStore} from './State';
+import { usePinActiveStore, usePinLocationStore, useComputedGlobeRotateStore, useGlobeRotateStore, useGlobeTiltStore, usePinRotateStore} from './State';
 import { useTexture } from '@react-three/drei';
 import { useSpring } from '@react-spring/three';
 import { useRef } from 'react';
@@ -10,7 +10,7 @@ import normalImg from './2k_earth_normal_map.jpg';
 const getRotationSpeed = (rpm: number) => 2 * Math.PI * rpm / 60;
 
 const GLOBE_RADIUS = 1;
-const GLOBE_TILT = 0.175 * Math.PI;
+const DEFAULT_GLOBE_TILT = 0.175 * Math.PI;
 const PRIMARY_MAP_PIN_DEFAULT_SCALE = 0.04;
 const PRIMARY_MAP_PIN_MAXIMIZED_SCALE = 0.06;
 const PRIMARY_MAP_PIN_HEIGHT_DIMENSION = 3;
@@ -28,7 +28,14 @@ interface MarkerPosition {
   rotation: Euler;
 }
 
-const getMarkerPosition = (lat: number, lng: number, rotate: number, pinRotate: number, pinScale: number) : MarkerPosition => {
+const getMarkerPosition = (
+  lat: number, 
+  lng: number, 
+  rotate: number, 
+  tilt: number, 
+  pinRotate: number, 
+  pinScale: number
+  ) : MarkerPosition => {
   const pinDistance = GLOBE_RADIUS + pinScale * PRIMARY_MAP_PIN_HEIGHT_DIMENSION / 2 + PRIMARY_MAP_PIN_PADDING;
 
   // Converting Lat/Lng into cartesian
@@ -39,10 +46,12 @@ const getMarkerPosition = (lat: number, lng: number, rotate: number, pinRotate: 
   let posZ = -1 * pinDistance * Math.sin(theta) * Math.sin(phi);
 
   // Take into account the tilt of the globe
-  const newPosY = posY * Math.cos(GLOBE_TILT) - posZ * Math.sin(GLOBE_TILT);
-  const newPosZ = posZ * Math.cos(GLOBE_TILT) + posY * Math.sin(GLOBE_TILT);
+  const newPosY = posY * Math.cos(tilt) - posZ * Math.sin(tilt);
+  const newPosZ = posZ * Math.cos(tilt) + posY * Math.sin(tilt);
   posY = newPosY;
   posZ = newPosZ;
+
+  // Take all this into account to get pin location
   const position = new Vector3(posX, posY, posZ);
   const rotatePinQuaternion =
     new Quaternion()
@@ -98,7 +107,7 @@ const Sphere = () => {
   });
 
   return (
-    <mesh rotation={[GLOBE_TILT, 0, 0]} ref={sphere}>
+    <mesh rotation={[DEFAULT_GLOBE_TILT, 0, 0]} ref={sphere}>
       <sphereBufferGeometry args={[GLOBE_RADIUS, 64, 64]} />
       <meshStandardMaterial 
           map={colorMap}
@@ -132,7 +141,7 @@ const MapPin = () => {
   });
 
   const initMarker =
-    getMarkerPosition(springLat.get(), springLng.get(), currGlobeRotate, currPinRotate, pinScale.get());
+    getMarkerPosition(springLat.get(), springLng.get(), currGlobeRotate, DEFAULT_GLOBE_TILT, currPinRotate, pinScale.get());
   return (
     <mesh ref={mapPin} rotation={initMarker.rotation} position={initMarker.position}>
       <cylinderBufferGeometry

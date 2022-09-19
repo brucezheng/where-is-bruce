@@ -73,3 +73,9 @@ export const usePinRotateStore = create<RotationState>(set => ({
   incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
   setRotate: (theta) => set(state => ({ rotation: theta })),
 }));
+
+export const useGlobeTiltStore = create<RotationState>(set => ({
+  rotation: 0,
+  incrementRotate: (delta) => set(state => ({ rotation: state.rotation + delta })),
+  setRotate: (theta) => set(state => ({ rotation: theta })),
+}));
