@@ -184,6 +184,14 @@ export const locations: Map<string,Location> = new Map([
       color: '#056636',
     },
   ],
+  [
+    'washington_dc', 
+    {
+      displayName: 'Washington, D.C.',
+      latLng: { lat: 38.9072, lng: -77.0369 },
+      color: '#B32134',
+    },
+  ],
 ]);
 
 export const getLocation = (locationId: string): Location => {

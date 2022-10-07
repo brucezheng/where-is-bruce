@@ -158,6 +158,11 @@ export const trips: Array<Trip> = [
     tripEnd: 'October 5, 2022',
   },
   {
+    locationId: 'dallas_tx',
+    tripStart: 'October 6, 2022',
+    tripEnd: 'October 6, 2022',
+  },
+  {
     locationId: 'rosebud_tx',
     tripStart: 'October 7, 2022',
     tripEnd: 'October 8, 2022',
@@ -166,6 +171,16 @@ export const trips: Array<Trip> = [
     locationId: 'portland_or',
     tripStart: 'October 9, 2022',
     tripEnd: 'October 14, 2022',
+  },
+  {
+    locationId: 'college_station_tx',
+    tripStart: 'October 15, 2022',
+    tripEnd: 'October 16, 2022',
+  },
+  {
+    locationId: 'washington_dc',
+    tripStart: 'October 17, 2022',
+    tripEnd: 'October 24, 2022',
   },
 ];
 
